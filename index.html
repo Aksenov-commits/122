@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Недвижимость Pro – каталог с избранным</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ====== ШАПКА ====== -->
+<nav class="navbar navbar-expand-lg fixed-top glass-nav">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#"><i class="fas fa-building me-2"></i>Недвижимость Pro</a>
+        <div class="ms-auto d-flex align-items-center gap-2">
+            <button id="favoritesBtn" class="btn-premium-outline" style="border-color: #ffc107; color: #ffc107; padding: 6px 14px;">
+                <span id="favCount">0</span> ⭐
+            </button>
+            <button id="loginModalBtn" class="btn-premium-outline"><i class="fas fa-sign-in-alt me-1"></i> Войти</button>
+            <div id="userInfoBlock" class="d-none align-items-center gap-3">
+                <div class="user-avatar-sm"><i class="fas fa-user"></i></div>
+                <span id="userNameDisplay" class="text-light"></span>
+                <span id="userRoleBadge" class="badge bg-secondary"></span>
+                <button id="logoutBtn" class="btn btn-sm btn-outline-light"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ====== МОДАЛКА ВХОДА ====== -->
+<div class="modal fade" id="authModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title"><i class="fas fa-key"></i> Вход / Регистрация</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs mb-3" id="authTab">
+                    <li class="nav-item"><button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#loginPanel">Вход</button></li>
+                    <li class="nav-item"><button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#registerPanel">Регистрация</button></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="loginPanel">
+                        <form id="loginForm">
+                            <div class="mb-2"><input type="email" id="loginEmail" class="form-control" placeholder="Email"></div>
+                            <div class="mb-2"><input type="password" id="loginPassword" class="form-control" placeholder="Пароль"></div>
+                            <button class="btn-premium w-100">Войти</button>
+                        </form>
+                        <div class="mt-2 small text-secondary">Тестовые: admin@example.com / 123 (admin); agent@example.com / 123 (agent); user@example.com / 123 (user)</div>
+                    </div>
+                    <div class="tab-pane fade" id="registerPanel">
+                        <form id="registerForm">
+                            <div class="mb-2"><input type="text" id="regName" class="form-control" placeholder="Имя и фамилия"></div>
+                            <div class="mb-2"><input type="email" id="regEmail" class="form-control" placeholder="Email"></div>
+                            <div class="mb-2"><input type="password" id="regPassword" class="form-control" placeholder="Пароль"></div>
+                            <div class="mb-2"><select id="regRole" class="form-select"><option value="user">Пользователь</option><option value="agent">Агент</option><option value="admin">Администратор</option></select></div>
+                            <button class="btn-premium w-100">Зарегистрироваться</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====== МОДАЛЬНОЕ ОКНО ИЗБРАННОГО ====== -->
+<div class="modal fade" id="favoritesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <h5 class="modal-title"><span style="color: #ffc107;">⭐</span> Избранное</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="favoritesModalBody"></div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====== ОСНОВНОЙ КОНТЕНТ ====== -->
+<div class="container py-4">
+    <div class="hero-section mb-4">
+        <div class="row align-items-center">
+            <div class="col-lg-8"><h1 class="display-5 fw-bold">Элитная недвижимость <span class="accent-text">в твоём телефоне</span></h1><p class="lead">Умные фильтры, сделки онлайн, рейтинг агентов.</p><button id="scrollBtn" class="btn-premium mt-2">Начать поиск</button></div>
+            <div class="col-lg-4 text-end d-none d-lg-block"><i class="fas fa-chart-line fa-5x opacity-25 accent-text"></i></div>
+        </div>
+    </div>
+
+    <div class="filter-card mb-4">
+        <div class="row g-2">
+            <div class="col-md-3"><select id="filterType" class="form-select"><option value="">Все типы</option><option value="квартира">Квартира</option><option value="частный дом">Дом</option><option value="земельный участок">Участок</option><option value="коммерческая">Коммерческая</option></select></div>
+            <div class="col-md-3"><select id="filterStatus" class="form-select"><option value="">Любой статус</option><option value="свободно">Свободно</option><option value="продано">Продано</option><option value="сдано">Сдано</option></select></div>
+            <div class="col-md-3"><input type="number" id="filterPriceMin" class="form-control" placeholder="Цена от"></div>
+            <div class="col-md-3"><input type="number" id="filterPriceMax" class="form-control" placeholder="Цена до"></div>
+            <div class="col-md-8"><input type="text" id="filterAddress" class="form-control" placeholder="Поиск по адресу"></div>
+            <div class="col-md-4"><button id="applyFiltersBtn" class="btn-premium w-100">Найти</button></div>
+        </div>
+    </div>
+
+    <div id="addPropertyBtnContainer" class="text-end mb-3" style="display:none;"><button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#propertyModal" onclick="openPropertyModal()">+ Добавить объект</button></div>
+
+    <div id="propertiesList" class="row g-4"></div>
+    <div id="pagination" class="d-flex justify-content-center mt-4"></div>
+</div>
+
+<footer class="footer mt-4 text-center"><div class="container"><p class="mb-0">Каталог недвижимости — полный функционал (избранное, сделки, отзывы)</p></div></footer>
+
+<!-- ====== МОДАЛЬНЫЕ ОКНА ====== -->
+<div class="modal fade" id="propertyModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="propertyModalTitle">Объект</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="propertyForm"><input type="hidden" id="propertyId"><div class="mb-2"><label>Адрес</label><input type="text" id="propAddress" class="form-control" required></div><div class="row"><div class="col-md-6"><select id="propType" class="form-select"><option value="квартира">Квартира</option><option value="частный дом">Дом</option><option value="земельный участок">Участок</option><option value="коммерческая">Коммерческая</option></select></div><div class="col-md-6"><input type="number" step="0.1" id="propArea" class="form-control" placeholder="Площадь м²"></div></div><div class="row mt-2"><div class="col-md-6"><input type="number" id="propPriceSale" class="form-control" placeholder="Цена продажи"></div><div class="col-md-6"><input type="number" id="propPriceRent" class="form-control" placeholder="Цена аренды/мес"></div></div><div class="mt-2"><select id="propStatus" class="form-select"><option value="свободно">Свободно</option><option value="продано">Продано</option><option value="сдано">Сдано</option></select></div><div class="mt-2"><textarea id="propDescription" rows="2" class="form-control" placeholder="Описание"></textarea></div></form></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button><button class="btn btn-primary" onclick="saveProperty()">Сохранить</button></div></div></div></div>
+
+<div class="modal fade" id="reviewModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5>Отзыв агенту</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" id="reviewAgentId"><div><label>Оценка 1-5</label><input type="number" id="reviewRating" class="form-control" min="1" max="5" value="5"></div><div class="mt-2"><label>Комментарий</label><textarea id="reviewComment" rows="2" class="form-control"></textarea></div></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button><button class="btn btn-primary" onclick="submitReview()">Отправить</button></div></div></div></div>
+
+<div class="modal fade" id="transactionModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header bg-success text-white"><h5>Сделка</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" id="transPropertyId"><div><label>Тип</label><select id="transType" class="form-select"><option value="продажа">Продажа</option><option value="аренда">Аренда</option></select></div><div class="mt-2"><label>Сумма</label><input type="number" id="transAmount" class="form-control" placeholder="Сумма"></div><div class="mt-2"><label>ID клиента</label><input type="number" id="transClientId" class="form-control"></div><div class="mt-2"><label>ID агента</label><input type="number" id="transAgentId" class="form-control"></div></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button><button class="btn btn-success" onclick="makeTransaction()">Оформить</button></div></div></div></div>
+
+<div class="modal fade" id="detailsModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content details-modal-content"><div class="modal-header"><h5 id="detailsModalTitle">Детали объекта</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body" id="detailsModalBody"></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button></div></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
